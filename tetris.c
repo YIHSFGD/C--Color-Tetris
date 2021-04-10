@@ -306,7 +306,7 @@ bool BlockCrash(int x, int y) { // x,y 를 매개변수로 받음.
 // 블럭 drop
 void blockdrop() {
 	endTime = clock(); // endTime 시간재기
-	if ((endTime - BlockDropTime) >= 800) { // endTime - BlockDropTime 블럭이나온지 0.8 초뒤 0.8초마다 내려감 y + 1
+	if ((endTime - BlockDropTime) >= 850) { // endTime - BlockDropTime 블럭이나온지 0.8 초뒤 0.8초마다 내려감 y + 1
 		if (BlockCrash(x, y + 1) == true) { // x = 8 , y + 1 = 아래칸이 충돌했을 때.
 			return; // 함수종료.
 		}
