@@ -289,7 +289,7 @@ void DrawLine() {
 
 
 // 충돌 확인
-bool BlockCrash(int x, int y) { // x,y 를 매개변수로 받음.
+bool crash(int x, int y) { // x,y 를 매개변수로 받음.
 	for (int row = 0; row < 4; row++) { // y값 검사
 		for (int cols = 0; cols < 4; cols++) { // x값 검사
 			if (block[blockForm][blockRotation][row][cols] == 1) { // 블럭 1값을 찾으면,
@@ -307,7 +307,7 @@ bool BlockCrash(int x, int y) { // x,y 를 매개변수로 받음.
 void blockdrop() {
 	endTime = clock(); // endTime 시간재기
 	if ((endTime - BlockDropTime) >= 850) { // endTime - BlockDropTime 블럭이나온지 0.8 초뒤 0.8초마다 내려감 y + 1
-		if (BlockCrash(x, y + 1) == true) { // x = 8 , y + 1 = 아래칸이 충돌했을 때.
+		if (crash(x, y + 1) == true) { // x = 8 , y + 1 = 아래칸이 충돌했을 때.
 			return; // 함수종료.
 		}
 		else {
@@ -321,7 +321,7 @@ void blockdrop() {
 
 // 땅
 void blockDownStop(int timeA) {
-	if (BlockCrash(x, y + 1) == true) { // 만약 아래에 충돌이있으면.
+	if (crash(x, y + 1) == true) { // 만약 아래에 충돌이있으면.
 		if ((endTime - mapblocktime) > timeA) { // end-T - startGround값이 > 1000 즉 1초보다 크다면
 			// 현재 블럭모양으로
 			if (color == 0) {
@@ -447,9 +447,9 @@ void DrawMap() {
 			}
 			else if (map[row][cols] == 8) {
 				printf(BLUE);
-			gotoxy(cols * 2, row); // 블럭
-			printf("■");
-			printf("\033[0m");
+				gotoxy(cols * 2, row); // 블럭
+				printf("■");
+				printf("\033[0m");
 			}
 		}
 	}
@@ -496,14 +496,14 @@ void control() {
 		key = _getch(); // key변수안에 _getch 입력값을 저장한다.
 		switch (key) { // 스위치문
 		case 72: {// UP
-			if (BlockCrash(x + 2, y) == false && BlockCrash(x, y + 1) == false && BlockCrash(x - 2, y) == false) {
+			if (crash(x + 2, y) == false && crash(x, y + 1) == false && crash(x - 2, y) == false) {
 				blockRotation++;
 			}
-				if (blockRotation >= 4)
-				{
-					blockRotation = 0;
-					mapblocktime = clock();
-				}
+			if (blockRotation >= 4)
+			{
+				blockRotation = 0;
+				mapblocktime = clock();
+			}
 			else {
 				if (blockRotation >= 4) {
 					blockRotation = 0;
@@ -513,26 +513,26 @@ void control() {
 			}
 		}
 		case 75: {// 왼쪽 화살표 키
-			if (BlockCrash(x - 2, y) == false) {
+			if (crash(x - 2, y) == false) {
 				x -= 2; // 왼쪽 충돌검사 x - 2(자릿수)
 				mapblocktime = clock();
 			}
 			break;
 		}
 		case 77: { // 오른쪽 화살표 키
-			if (BlockCrash(x + 2, y) == false) { // 오른쪽 충돌검사 false = x+= 2  ? + 사용한 블럭 유니코드의 자릿수가 2이므로.
+			if (crash(x + 2, y) == false) { // 오른쪽 충돌검사 false = x+= 2  ? + 사용한 블럭 유니코드의 자릿수가 2이므로.
 				x += 2;
 				mapblocktime = clock();
 			}
 			break;
 		}
 		case 80: { // 아래쪽 화살표 키
-			if (BlockCrash(x, y + 1) == false) // 아래 충돌검사 false = y++
+			if (crash(x, y + 1) == false) // 아래 충돌검사 false = y++
 				y++;
 			break;
 		}
 		case 32: {
-			while (BlockCrash(x, y + 1) == false) {
+			while (crash(x, y + 1) == false) {
 				y++;
 			}
 			blockDownStop(0);
