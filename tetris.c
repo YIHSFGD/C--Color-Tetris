@@ -363,19 +363,27 @@ void blockDownStop(int timeA) {
 
 // 1줄 라인 제거
 void RemoveLine() {
-	for (int row = 21; row >= 0; row--) { // 22
+	for (int ScanLine = 21; ScanLine >= 0; ScanLine--) { // 22 ( 세로 1 ) 아래에서부터 위로
 		int count = 0;
-		for (int cols = 1; cols < 12; cols++) { //  10
-			if (map[row][cols] == 2 || map[row][cols] == 3 || map[row][cols] == 4 || map[row][cols] == 5 || map[row][cols] == 6 || map[row][cols] == 7 || map[row][cols] == 8) { // 맵의 아래쪽부터 위로 검사함. 2발견시
+		for (int ScanCols = 1; ScanCols < 12; ScanCols++) { //  ( 가로 1 )
+			if (map[ScanLine][ScanCols] == 2 || map[ScanLine][ScanCols] == 3 || map[ScanLine][ScanCols] == 4 || map[ScanLine][ScanCols] == 5 || map[ScanLine][ScanCols] == 6 || map[ScanLine][ScanCols] == 7 || map[ScanLine][ScanCols] == 8) { // 맵의 아래쪽부터 위로 검사함. 2발견시
 				count++; // count++;
 			}
+			else {
+				count += 0;
+			}
 		}
+		// ScanLine == 21 - 10 = 11
 		if (count >= 10) { // 벽돌이 다 차있다면
-			for (int row2 = 0; row2 <= 21; row2++) {
-				for (int del = 1; del < 11; del++) {
-					if (row - row2 - 1 >= 0)
+			for (int j = 0; ScanLine - j >= 0; j++) { // i번째 
+				for (int cols = 1; cols < 11; cols++) { // 줄 검사
+					if (ScanLine - j - 1 >= 0)
 					{
-						map[row - row2][del] = map[row - row2 - 1][del];
+						map[ScanLine - j][cols] = map[ScanLine - j - 1][cols];
+					}
+					else
+					{
+						map[ScanLine - j][cols] = 0;
 					}
 				}
 			}
@@ -384,6 +392,24 @@ void RemoveLine() {
 		}
 	}
 }
+/*
+한줄 제거 되는 원리
+
+22 번 반복
+10번반복
+즉 맵검사용 반복문임.
+map[y][x]에 블럭이 감지되면 count++ 을 해준다.
+
+아니면 count += 0;
+그걸계속 반복하는데,
+
+그러다 count가 10보다 커질때,
+j가 (row(현재검사하고있는라인)-j(j가0이면 현재층 j가1이면 현재층에-1이므로 그 윗층이된다.
+
+즉 row - j (현재층) - 1은 현재돌고있는 층의 윗층이된다. 현재돌고있는층의 윗층이 없을떄까지 반복하고,
+만약 윗층이 없다면, 0으로 채운다. 그리고 점수와 라인 변수에 각각의 수를 더해준다.
+
+*/
 
 // 맨 윗줄에 블럭이 감지되면 게임 종료
 void gameover() {
