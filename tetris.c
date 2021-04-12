@@ -34,7 +34,7 @@ int blockRotation = 0;
 #define GREEN "\033[32m"
 #define YELLOW "\033[33m"
 #define BLUE "\033[34m"
-#define qhfk "\033[35m"
+#define dkanrjsk "\033[35m"
 #define CR "\033[36m"
 #define dkanrjsk "\033[33m"
 #define rkdwh "\033[1m"
@@ -414,7 +414,7 @@ void nextblock() {
 					printf(dkanrjsk);
 				}
 				if (color == 5) {
-					printf(qhfk);
+					printf(dkanrjsk);
 				}
 				if (color == 6) {
 					printf(BLUE);
@@ -433,6 +433,7 @@ void nextblock() {
 void Interface() {
 
 	// 네모 박스
+	
 	gotoxy(27, 6);
 	printf("\u250c");
 	int i;
@@ -460,13 +461,16 @@ void Interface() {
 	}
 	gotoxy(26, 6);
 	printf("\u250C");
+	
 
 	// 설명
 	gotoxy(34, 4);
 	printf(rkdwh);
-	printf(RED);
+	printf(YELLOW);
 	printf("조작법");
 	printf("\033[0m");
+	printf(rkdwh);
+	
 	gotoxy(28, 7);
 	printf("← , → : 블럭 이동");
 	gotoxy(30, 8);
@@ -479,7 +483,8 @@ void Interface() {
 	printf("esc : 멈춰!");
 	gotoxy(33, 12);
 	printf("e = 종료");
-
+	printf("\033[0m");
+	
 	// 점수
 	gotoxy(30, 15);
 	printf(rkdwh);
@@ -554,7 +559,7 @@ void Interface() {
 void developer() {
 	gotoxy(28, 19);
 	printf(rkdwh);
-	printf(dkanrjsk);
+	printf(YELLOW);
 	printf(" 개발자 : HyeonJoong ");
 	printf("\033[0m");
 }
@@ -667,7 +672,7 @@ void DrawMap() {
 				printf("\033[0m");
 			}
 			else if (map[row][cols] == 7) {
-				printf(qhfk);
+				printf(dkanrjsk);
 				gotoxy(cols * 2, row); // 블럭
 				printf("■");
 				printf("\033[0m");
@@ -703,7 +708,7 @@ void DrawBlock() {
 					printf(dkanrjsk);
 				}
 				if (color == 5) {
-					printf(qhfk);
+					printf(dkanrjsk);
 				}
 				if (color == 6) {
 					printf(BLUE);
@@ -865,6 +870,7 @@ int main() {
 	DrawMap();
 	Interface();
 	DrawScore();
+	DrawLine();
 	developer();
 	deathline();
 
