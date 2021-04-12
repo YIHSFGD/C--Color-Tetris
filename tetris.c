@@ -8,16 +8,18 @@
 
 clock_t BlockDropTime, endTime, mapblocktime;
 int x = 8, y = 0;
-int blockForm;
-int blockRotation = 0;
 int key;
 int score = 0;
 int color = 0;
 int line = 0;
 int gameend = 0;
 int groundblockcolor = 0;
-int nextblockform = 0;
 
+// 다음 블럭
+int nextblockform = 0;
+// 현재 블럭
+int blockForm = 0;
+int blockRotation = 0;
 
 // 키 입력 받기
 #define UP 72
@@ -72,7 +74,7 @@ int map[21][12] = {
 // 랜덤 블럭
 void RandomBlockForm() {
 	srand(time(NULL));
-	blockForm = rand() % 7;
+	nextblockform = rand() % 7;
 }
 
 
@@ -288,6 +290,18 @@ void RemoveBlock() {
 		}
 	}
 }
+// 다음칸 청소
+void nextclear() {
+	for (int row = 0; row < 4; row++) {
+		for (int cols = 0; cols < 4; cols++) {
+			if (block[nextblockform][0][row][cols] == 1) { // block값이 1일떄 == block이 잇을때
+				gotoxy((cols * 2) + 60, (row + 7)); // 지정된 색으로 블럭을그림. x = 8, y = 0 (4x4)
+				printf("  ");
+			}
+		}
+	}
+
+}
 
 
 // 점수 업데이트
@@ -371,6 +385,8 @@ void blockDownStop(int timeA) {
 			}
 			x = 8; // 초기화
 			y = 0; // 초기화
+			blockForm = nextblockform;
+			nextclear();
 			RandomBlockForm(); // 블럭을 놓았다면, blockform을 랜덤으로 바꿈.
 			randomcolor(); // 색도 바꾸기
 		}
@@ -379,14 +395,38 @@ void blockDownStop(int timeA) {
 
 // 다음 블럭
 void nextblock() {
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			if (block[blockForm][blockRotation][i][j] == 1) {
-				gotoxy(57, 5);
+	for (int row = 0; row < 4; row++) {
+		for (int cols = 0; cols < 4; cols++) {
+			if (block[nextblockform][0][row][cols] == 1) { // block값이 1일떄 == block이 잇을때
+				if (color == 0) {
+					printf(RED);
+				}
+				if (color == 1) {
+					printf(GREEN);
+				}
+				if (color == 2) {
+					printf(YELLOW);
+				}
+				if (color == 3) {
+					printf(CR);
+				}
+				if (color == 4) {
+					printf(dkanrjsk);
+				}
+				if (color == 5) {
+					printf(qhfk);
+				}
+				if (color == 6) {
+					printf(BLUE);
+				}
+				gotoxy((cols * 2) + 60, (row + 7)); // 지정된 색으로 블럭을그림. x = 8, y = 0 (4x4)
 				printf("■");
+				printf("\033[0m"); // 색깔 효과 없애기
+
 			}
 		}
 	}
+	
 }
 
 // 인터페이스
@@ -506,10 +546,6 @@ void Interface() {
 	for (i = 0; i < 8; i++) {
 		printf("■");
 	}
-	
-
-	
-	
 }
 
 // 개발자
@@ -835,6 +871,7 @@ int main() {
 	// 콘솔 업데이트 반복
 	while (1) {
 		DrawMap();
+		nextblock();
 		DrawBlock();
 		blockdrop();
 		gameover();
