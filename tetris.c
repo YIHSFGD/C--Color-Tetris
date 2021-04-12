@@ -16,6 +16,8 @@ int color = 0;
 int line = 0;
 int gameend = 0;
 int groundblockcolor = 0;
+int nextblockform = 0;
+
 
 // 키 입력 받기
 #define UP 72
@@ -33,6 +35,7 @@ int groundblockcolor = 0;
 #define qhfk "\033[35m"
 #define CR "\033[36m"
 #define dkanrjsk "\033[33m"
+#define rkdwh "\033[1m"
 
 // 랜덤한 색
 void randomcolor() {
@@ -273,6 +276,19 @@ int block[7][4][4][4] = {
 	}
 };
 
+// 전 블럭 지우기
+void RemoveBlock() {
+	for (int row = 0; row < 4; row++) {
+		for (int cols = 0; cols < 4; cols++) {
+			if (block[blockForm][blockRotation][row][cols] == 1) {
+				gotoxy((x + cols * 2), (y + row)); // 지정된 색으로 블럭을그림. x = 8, y = 0 (4x4)
+				printf("  ");
+				printf("\033[0m"); // 색깔 효과 없애기
+			}
+		}
+	}
+}
+
 
 // 점수 업데이트
 void DrawScore() {
@@ -311,10 +327,11 @@ void blockdrop() {
 			return; // 함수종료.
 		}
 		else {
+			RemoveBlock();
 			y++; // y값,
 			BlockDropTime = clock(); // 시간재기
 			mapblocktime = clock(); // 시간재기
-			system("cls"); // cls 콘솔 클리어 전 블럭 지우기.
+			//system("cls"); // cls 콘솔 클리어 전 블럭 지우기.
 		}
 	}
 }
@@ -360,9 +377,152 @@ void blockDownStop(int timeA) {
 	}
 }
 
+// 다음 블럭
+void nextblock() {
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (block[blockForm][blockRotation][i][j] == 1) {
+				gotoxy(57, 5);
+				printf("■");
+			}
+		}
+	}
+}
+
+// 인터페이스
+void Interface() {
+
+	// 네모 박스
+	gotoxy(27, 6);
+	printf("\u250c");
+	int i;
+	for (i = 0; i < 20; i++) {
+		gotoxy(i + 27, 6);
+		printf("\u2500");
+	}
+	gotoxy(i + 27, 6);
+	printf("\u2510");
+	for (i = 0; i < 6; i++) {
+		gotoxy(47, i + 7);
+		printf("\u2502");
+	}
+	gotoxy(47, i + 7);
+	printf("\u2518");
+	for (i = 0; i < 20; i++) {
+		gotoxy(27 + i, 13);
+		printf("\u2500");
+	}
+	gotoxy(26, 13);
+	printf("\u2514");
+	for (i = 0; i < 6; i++) {
+		gotoxy(26, i + 7);
+		printf("\u2502");
+	}
+	gotoxy(26, 6);
+	printf("\u250C");
+
+	// 설명
+	gotoxy(34, 4);
+	printf(rkdwh);
+	printf(RED);
+	printf("조작법");
+	printf("\033[0m");
+	gotoxy(28, 7);
+	printf("← , → : 블럭 이동");
+	gotoxy(30, 8);
+	printf("↑ : 블럭 회전");
+	gotoxy(30, 9);
+	printf("↓ : 블럭 놓기");
+	gotoxy(32, 10);
+	printf("space : 드랍");
+	gotoxy(31, 11);
+	printf("esc : 멈춰!");
+	gotoxy(33, 12);
+	printf("e = 종료");
+
+	// 점수
+	gotoxy(30, 15);
+	printf(rkdwh);
+	printf(BLUE);
+	printf("점수  :");
+	printf("\033[0m");
+	gotoxy(30, 17);
+	printf(rkdwh);
+	printf(GREEN);
+	printf("라인  :");
+	printf("\033[0m");
+
+	// 다음
+	gotoxy(59, 3);
+	printf(rkdwh);
+	printf(YELLOW);
+	printf("다음블럭");
+	printf("\033[0m");
+	
+	//
+	
+	//
+	gotoxy(55, 5);
+	for (i = 0; i < 8; i++) {
+		printf("■");
+	}
+	gotoxy(55, 6);
+	printf("■");
+	for (i = 0; i < 6; i++) {
+		printf("  ");
+	}
+	printf("■");
+	gotoxy(55, 7);
+	printf("■");
+	for (i = 0; i < 6; i++) {
+		printf("  ");
+	}
+	printf("■");
+	gotoxy(55, 8);
+	printf("■");
+	for (i = 0; i < 6; i++) {
+		printf("  ");
+	}
+	printf("■");
+	gotoxy(55, 9);
+	printf("■");
+	for (i = 0; i < 6; i++) {
+		printf("  ");
+	}
+	printf("■");
+	gotoxy(55, 10);
+	printf("■");
+	for (i = 0; i < 6; i++) {
+		printf("  ");
+	}
+	printf("■");
+	gotoxy(55, 11);
+	printf("■");
+	for (i = 0; i < 6; i++) {
+		printf("  ");
+	}
+	printf("■");
+	gotoxy(55, 12);
+	for (i = 0; i < 8; i++) {
+		printf("■");
+	}
+	
+
+	
+	
+}
+
+// 개발자
+void developer() {
+	gotoxy(28, 19);
+	printf(rkdwh);
+	printf(dkanrjsk);
+	printf(" 개발자 : HyeonJoong ");
+	printf("\033[0m");
+}
 
 // 1줄 라인 제거
-void RemoveLine() {
+bool RemoveLine() {
 	for (int ScanLine = 21; ScanLine >= 0; ScanLine--) { // 22 ( 세로 1 ) 아래에서부터 위로
 		int count = 0;
 		for (int ScanCols = 1; ScanCols < 12; ScanCols++) { //  ( 가로 1 )
@@ -387,6 +547,9 @@ void RemoveLine() {
 					}
 				}
 			}
+			system("cls");
+			Interface();
+			developer();
 			score += 100; // 라인이 없어지고나면 score(점수)를 +=
 			line += 1; // 라인이 없어지고 나면 line을 +=
 		}
@@ -434,7 +597,7 @@ void DrawMap() {
 			if (map[row][cols] == 1) { // 벽
 				gotoxy(cols * 2, row);
 				printf("□");
-			}
+			} 
 			else if (map[row][cols] == 2) {
 				printf(RED);
 				gotoxy(cols * 2, row); // 블럭
@@ -521,8 +684,30 @@ void control() {
 	if (_kbhit()) { // 만약, 키보드 입력을 받았다면
 		key = _getch(); // key변수안에 _getch 입력값을 저장한다.
 		switch (key) { // 스위치문
-		case 72: {// UP
-			if (crash(x + 2, y) == false && crash(x, y + 1) == false && crash(x - 2, y) == false) {
+
+		case UP: { // UP
+			RemoveBlock();
+			if (crash(x + 2, y)) {
+				x -= 2;
+				y;
+				blockRotation++;
+			}
+			RemoveBlock();
+			if (crash(x - 2, y)) {
+				x += 2;
+				y;
+				blockRotation++;
+			}
+			RemoveBlock();
+			if (crash(x, y + 1)) {
+				x;
+				y -= 2;
+				blockRotation++;
+			}
+			RemoveBlock();
+			if (crash(x, y - 1)) {
+				x;
+				y += 2;
 				blockRotation++;
 			}
 			if (blockRotation >= 4)
@@ -530,7 +715,9 @@ void control() {
 				blockRotation = 0;
 				mapblocktime = clock();
 			}
+
 			else {
+				blockRotation++;
 				if (blockRotation >= 4) {
 					blockRotation = 0;
 					mapblocktime = clock();
@@ -538,27 +725,36 @@ void control() {
 				break;
 			}
 		}
-		case 75: {// 왼쪽 화살표 키
+		case LEFT: {// 왼쪽 화살표 키
 			if (crash(x - 2, y) == false) {
+				RemoveBlock();
 				x -= 2; // 왼쪽 충돌검사 x - 2(자릿수)
 				mapblocktime = clock();
 			}
 			break;
 		}
-		case 77: { // 오른쪽 화살표 키
+		case RIGHT: { // 오른쪽 화살표 키
 			if (crash(x + 2, y) == false) { // 오른쪽 충돌검사 false = x+= 2  ? + 사용한 블럭 유니코드의 자릿수가 2이므로.
+				RemoveBlock();
 				x += 2;
 				mapblocktime = clock();
 			}
 			break;
 		}
-		case 80: { // 아래쪽 화살표 키
-			if (crash(x, y + 1) == false) // 아래 충돌검사 false = y++
-				y++;
+		case DOWN: { // 아래쪽 화살표 키
+			if (crash(x, y + 1) == false){ // 아래 충돌검사 false = y++
+				RemoveBlock();
+			y++;
 			break;
 		}
-		case 32: {
+			if (crash(x, y + 1 == true)) {
+				return;
+					break;
+			}
+		}
+		case 32: { // space
 			while (crash(x, y + 1) == false) {
+				RemoveBlock();
 				y++;
 			}
 			blockDownStop(0);
@@ -570,18 +766,17 @@ void control() {
 		}
 		case 101: {
 			gameend = 1;
-			system("cls");
 			break;
 		}
 		}
-		system("cls"); // 콘솔 창 지우기
+		//system("cls"); // 콘솔 창 지우기
 	}
 	return;
 }
 
 // 콘솔 창 크기 및 타이틀
 void gamesize() {
-	system("mode con cols=52 lines=22");
+	system("mode con cols=77 lines=22");
 	system("title 테트리스");
 }
 
@@ -593,66 +788,7 @@ void CursorRemove() {
 	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorinfo);
 }
 
-// 인터페이스
-void Interface() {
 
-	// 네모 박스
-	gotoxy(27, 6);
-	printf("\u250c");
-	int i;
-	for (i = 0; i < 20; i++) {
-		gotoxy(i + 27, 6);
-		printf("\u2500");
-	}
-	gotoxy(i + 27, 6);
-	printf("\u2510");
-	for (i = 0; i < 6; i++) {
-		gotoxy(47, i + 7);
-		printf("\u2502");
-	}
-	gotoxy(47, i + 7);
-	printf("\u2518");
-	for (i = 0; i < 20; i++) {
-		gotoxy(27 + i, 13);
-		printf("\u2500");
-	}
-	gotoxy(26, 13);
-	printf("\u2514");
-	for (i = 0; i < 6; i++) {
-		gotoxy(26, i + 7);
-		printf("\u2502");
-	}
-	gotoxy(26, 6);
-	printf("\u250C");
-
-	// 설명
-	gotoxy(34, 3);
-	printf("조작법");
-	gotoxy(28, 7);
-	printf("← , → : 블럭 이동");
-	gotoxy(30, 8);
-	printf("↑ : 블럭 회전");
-	gotoxy(30, 9);
-	printf("↓ : 블럭 놓기");
-	gotoxy(32, 10);
-	printf("space : 드랍");
-	gotoxy(31, 11);
-	printf("esc : 멈춰!");
-	gotoxy(33, 12);
-	printf("e = 종료");
-
-	// 점수
-	gotoxy(30, 15);
-	printf("점수  :");
-	gotoxy(30, 17);
-	printf("라인  :");
-}
-
-// 개발자
-void developer() {
-	gotoxy(28, 19);
-	printf(" 개발자 : HyeonJoong ");
-}
 
 // 데드라인
 void deathline() {
@@ -687,7 +823,6 @@ void deathline() {
 int main() {
 	system("title 테트리스");
 	CursorRemove();
-	BlockDropTime = clock();
 	RandomBlockForm();
 	gamesize();
 	DrawMap();
@@ -700,8 +835,6 @@ int main() {
 	// 콘솔 업데이트 반복
 	while (1) {
 		DrawMap();
-		Interface();
-		developer();
 		DrawBlock();
 		blockdrop();
 		gameover();
