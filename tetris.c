@@ -502,6 +502,7 @@ void Interface() {
 	//
 	
 	//
+	printf(CR);
 	gotoxy(55, 5);
 	for (i = 0; i < 8; i++) {
 		printf("■");
@@ -546,6 +547,7 @@ void Interface() {
 	for (i = 0; i < 8; i++) {
 		printf("■");
 	}
+	printf("\033[0m");
 }
 
 // 개발자
@@ -853,7 +855,6 @@ void deathline() {
 	printf("               ");
 
 }
-
 
 // 메인함수
 int main() {
